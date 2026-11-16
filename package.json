@@ -1,0 +1,77 @@
+{
+  "name": "arcanum",
+  "productName": "Arcanum",
+  "version": "0.9.0",
+  "description": "Make visual novels from your comics.",
+  "main": "main.js",
+  "author": "Arcanum",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "start": "electron .",
+    "dist": "node fetch-fonts.js && electron-builder",
+    "dist:win": "node fetch-fonts.js && electron-builder --win",
+    "dist:mac": "node fetch-fonts.js && electron-builder --mac",
+    "dist:linux": "node fetch-fonts.js && electron-builder --linux",
+    "fonts": "node fetch-fonts.js"
+  },
+  "devDependencies": {
+    "electron": "^33.2.0",
+    "electron-builder": "^25.1.8"
+  },
+  "build": {
+    "appId": "com.arcanum.app",
+    "productName": "Arcanum",
+    "files": [
+      "main.js",
+      "app/**",
+      "build/icon.png",
+      "LICENSE"
+    ],
+    "directories": {
+      "output": "dist",
+      "buildResources": "build"
+    },
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "artifactName": "Arcanum-Setup.${ext}"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "shortcutName": "Arcanum",
+      "artifactName": "Arcanum-Setup.${ext}"
+    },
+    "mac": {
+      "target": [
+        {
+          "target": "dmg",
+          "arch": [
+            "arm64",
+            "x64"
+          ]
+        }
+      ],
+      "category": "public.app-category.graphics-design",
+      "extendInfo": {
+        "NSMicrophoneUsageDescription": "Arcanum uses the microphone when you record dialogue for your characters."
+      },
+      "artifactName": "Arcanum-mac-${arch}.${ext}"
+    },
+    "linux": {
+      "target": [
+        "AppImage"
+      ],
+      "category": "Graphics",
+      "artifactName": "Arcanum-linux.${ext}"
+    }
+  }
+}
