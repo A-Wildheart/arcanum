@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Arcanum: a free visual novel studio</title>
+<meta name="description" content="Arcanum turns your comics and stories into visual novels. Plan on cards, write, stage scenes and publish a branching story. Free, open source, and your work stays on your computer.">
+<meta name="theme-color" content="#0B1424">
+<link rel="icon" href="img/favicon-64.png">
+<link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+<meta property="og:title" content="Arcanum: a free visual novel studio">
+<meta property="og:description" content="Turn your comics into visual novels. Free, open source, and your work stays on your computer.">
+<meta property="og:image" content="img/write.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Source+Sans+3:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --night:#0B1424; --night2:#0E1726; --panel:#122036; --ink:#EDE6D6; --muted:#A7B1C0; --gold:#E6C27C; --gold2:#C9A05A;
+  --cyan:#5AD4F2; --line:rgba(237,230,214,.13); --serif:Marcellus,Georgia,serif; --sans:"Source Sans 3",system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--night);color:var(--ink);font:400 18px/1.6 var(--sans);-webkit-font-smoothing:antialiased}
+a{color:var(--gold)}
+a:focus-visible,button:focus-visible{outline:2px solid var(--cyan);outline-offset:3px;border-radius:6px}
+img{max-width:100%;height:auto;display:block}
+.wrap{max-width:1160px;margin:0 auto;padding:0 24px}
+.skip{position:absolute;left:-999px}.skip:focus{left:16px;top:12px;background:var(--gold);color:var(--night);padding:8px 12px;border-radius:8px;z-index:10}
+
+/* header */
+header{position:sticky;top:0;z-index:5;background:rgba(11,20,36,.82);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.bar{display:flex;align-items:center;gap:24px;height:64px}
+.brand{display:flex;align-items:center;gap:10px;color:var(--ink);text-decoration:none;font:400 22px/1 var(--serif);letter-spacing:.04em}
+.brand img{width:32px;height:32px;border-radius:8px}
+nav{margin-left:auto;display:flex;gap:22px}
+nav a{color:var(--muted);text-decoration:none;font-size:16px;white-space:nowrap}
+nav a:hover{color:var(--ink)}
+@media (max-width:720px){nav a:not(.keep){display:none}}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;gap:10px;padding:14px 22px;border-radius:12px;font:600 17px/1 var(--sans);text-decoration:none;border:1px solid transparent;cursor:pointer}
+.btn.gold{background:linear-gradient(180deg,#F1D59C,var(--gold));color:#1B1610;box-shadow:0 8px 30px -10px rgba(230,194,124,.55)}
+.btn.gold:hover{background:linear-gradient(180deg,#F6DFAE,#EBC985)}
+.btn.ghost{border-color:var(--line);color:var(--ink);background:rgba(237,230,214,.04)}
+.btn.ghost:hover{border-color:rgba(237,230,214,.3)}
+
+/* hero */
+.hero{position:relative;overflow:hidden;padding:84px 0 40px}
+@media (max-width:720px){.hero{padding-top:28px}}
+.hero::before{content:"";position:absolute;inset:-20% -10% auto auto;width:780px;height:780px;background:radial-gradient(closest-side,rgba(90,212,242,.20),rgba(90,212,242,0));pointer-events:none}
+.hero .grid{display:grid;grid-template-columns:1.15fr .85fr;gap:40px;align-items:center}
+h1{font:400 clamp(44px,6.4vw,78px)/1.04 var(--serif);margin:0 0 22px;letter-spacing:.005em}
+.lead{font-size:21px;color:var(--muted);max-width:34em;margin:0 0 32px}
+.cta{display:flex;flex-wrap:wrap;gap:14px}
+.fine{font-size:15px;color:var(--muted);margin-top:18px}
+.cards{position:relative;height:420px}
+.cards svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+@media (max-width:860px){.hero .grid{grid-template-columns:1fr}.cards{height:230px;order:-1;margin-bottom:-10px}}
+
+/* product shot */
+.shot{position:relative;margin:24px auto 0;border-radius:16px;overflow:hidden;border:1px solid var(--line);box-shadow:0 40px 120px -40px rgba(90,212,242,.35),0 30px 60px -30px rgba(0,0,0,.6)}
+.shot img{width:100%}
+
+/* sections */
+section{padding:96px 0}
+h2{font:400 clamp(32px,4vw,46px)/1.12 var(--serif);margin:0 0 18px}
+.intro{color:var(--muted);max-width:38em;margin:0 0 48px}
+.rooms{display:grid;gap:72px}
+.room{display:grid;grid-template-columns:.8fr 1.2fr;gap:44px;align-items:center}
+.room:nth-child(even){grid-template-columns:1.2fr .8fr}
+.room:nth-child(even) .copy{order:2}
+.room .num{font:400 15px/1 var(--sans);color:var(--gold);display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.room .num::after{content:"";height:1px;width:48px;background:var(--gold2);opacity:.6}
+.room h3{font:400 30px/1.15 var(--serif);margin:0 0 12px}
+.room p{color:var(--muted);margin:0}
+.room figure{margin:0;border-radius:14px;overflow:hidden;border:1px solid var(--line);box-shadow:0 24px 60px -30px rgba(0,0,0,.7)}
+@media (max-width:860px){.room,.room:nth-child(even){grid-template-columns:1fr}.room:nth-child(even) .copy{order:0}}
+
+/* saving */
+.save{background:linear-gradient(180deg,var(--night),var(--night2) 30%,var(--night2))}
+.steps3{display:grid;grid-template-columns:repeat(3,1fr);gap:28px}
+.steps3 div{border-top:1px solid var(--line);padding-top:22px}
+.steps3 h3{font:600 19px/1.3 var(--sans);margin:0 0 8px}
+.steps3 p{color:var(--muted);margin:0;font-size:17px}
+.note{margin-top:40px;padding:18px 22px;border-left:3px solid var(--cyan);background:rgba(90,212,242,.06);border-radius:0 10px 10px 0;color:var(--ink);font-size:17px;max-width:46em}
+@media (max-width:860px){.steps3{grid-template-columns:1fr}}
+
+/* downloads */
+.dl{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px}
+.dl a{display:block;padding:22px;border:1px solid var(--line);border-radius:14px;background:var(--panel);color:var(--ink);text-decoration:none;transition:border-color .15s}
+.dl a:hover{border-color:rgba(230,194,124,.55)}
+.dl strong{display:block;font:400 22px/1.2 var(--serif);margin-bottom:6px}
+.dl span{display:block;color:var(--muted);font-size:16px}
+.dl em{display:block;font-style:normal;color:var(--gold);font-size:15px;margin-top:12px}
+.dl .soon{opacity:.7;pointer-events:none}
+#relinfo{color:var(--muted);font-size:15px;margin:22px 0 0}
+details{margin-top:28px;border-top:1px solid var(--line);padding-top:18px;max-width:52em}
+summary{cursor:pointer;font-weight:600}
+details p{color:var(--muted);font-size:17px}
+
+/* footer */
+footer{border-top:1px solid var(--line);padding:40px 0 56px;color:var(--muted);font-size:16px}
+footer .wrap{display:flex;flex-wrap:wrap;gap:16px 28px;align-items:center}
+footer a{color:var(--muted)}
+footer .brand{font-size:18px}
+
+@media (prefers-reduced-motion:no-preference){
+  .c1{animation:fanL 1.1s cubic-bezier(.2,.8,.2,1) both .1s}
+  .c2{animation:fanR 1.1s cubic-bezier(.2,.8,.2,1) both .1s}
+  .spark{animation:glow 1.4s ease-out both .7s}
+  @keyframes fanL{from{transform:rotate(6deg) translate(60px,10px)}to{transform:none}}
+  @keyframes fanR{from{transform:rotate(-4deg) translate(-40px,10px)}to{transform:none}}
+  @keyframes glow{from{opacity:0;transform:scale(.6)}to{opacity:1;transform:none}}
+}
+.c1,.c2,.spark{transform-box:fill-box;transform-origin:50% 100%}
+.spark{transform-origin:50% 50%}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header><div class="wrap bar">
+  <a class="brand" href="#top"><img src="img/apple-touch-icon.png" alt="">Arcanum</a>
+  <nav aria-label="Main">
+    <a href="#rooms">How it works</a>
+    <a href="#saving">Your files</a>
+    <a href="#download">Download</a>
+    <a href="app/" class="keep">Open the studio</a>
+  </nav>
+</div></header>
+
+<main id="main">
+<div class="hero" id="top"><div class="wrap grid">
+  <div>
+    <h1>Turn your comics into visual novels.</h1>
+    <p class="lead">Arcanum is a free studio for writers and artists. Plan your story on cards, write it, bring in your art, stage each scene, and publish a branching story anyone can read.</p>
+    <div class="cta">
+      <a class="btn gold" href="app/">Open Arcanum in your browser</a>
+      <a class="btn ghost" href="#download">Download for your computer</a>
+    </div>
+    <p class="fine">No account and no sign-up. Your projects are kept on your own computer.</p>
+  </div>
+  <div class="cards" aria-hidden="true">
+    <svg viewBox="0 0 520 440">
+      <defs>
+        <linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#F3D9A4"/><stop offset=".5" stop-color="#E6C27C"/><stop offset="1" stop-color="#C9A05A"/></linearGradient>
+        <linearGradient id="s" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#E9FBFF"/><stop offset=".5" stop-color="#5AD4F2"/><stop offset="1" stop-color="#1FA9D6"/></linearGradient>
+        <filter id="b" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="16"/></filter>
+        <filter id="sh" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="10"/></filter>
+      </defs>
+      <g opacity=".5" filter="url(#sh)"><rect x="96" y="58" width="172" height="252" rx="22" fill="#020812" transform="rotate(-4 182 190) translate(8 14)"/><rect x="226" y="72" width="172" height="252" rx="22" fill="#020812" transform="rotate(10 312 198) translate(8 14)"/></g>
+      <g class="c1"><rect x="96" y="58" width="172" height="252" rx="22" fill="url(#g)" transform="rotate(-4 182 190)"/><rect x="101" y="63" width="162" height="242" rx="18" fill="none" stroke="#fff" stroke-opacity=".5" stroke-width="2.5" transform="rotate(-4 182 190)"/></g>
+      <g class="c2"><rect x="219" y="65" width="186" height="266" rx="28" fill="#0B1424" transform="rotate(10 312 198)"/><rect x="226" y="72" width="172" height="252" rx="22" fill="url(#g)" transform="rotate(10 312 198)"/><rect x="231" y="77" width="162" height="242" rx="18" fill="none" stroke="#fff" stroke-opacity=".5" stroke-width="2.5" transform="rotate(10 312 198)"/></g>
+      <g class="spark">
+        <path d="M321 142 Q322.6 192.2 364.2 205.3 Q318.4 204.9 304.6 255.9 Q306 205.3 260 192.1 Q307.4 193.5 321 142Z" fill="#5AD4F2" opacity=".9" filter="url(#b)"/>
+        <path d="M321 142 Q322.6 192.2 364.2 205.3 Q318.4 204.9 304.6 255.9 Q306 205.3 260 192.1 Q307.4 193.5 321 142Z" fill="url(#s)"/>
+      </g>
+    </svg>
+  </div>
+</div>
+<div class="wrap"><div class="shot"><img src="img/write.jpg" width="1600" height="1000" alt="The Arcanum studio: a story's steps listed on the left and its lines written out in the middle, with the manuscript panel on the right."></div></div>
+</div>
+
+<section id="rooms"><div class="wrap">
+  <h2>From the first idea to a story people can play</h2>
+  <p class="intro">Arcanum follows the way a story gets made. Move between the stages whenever you like, and press Play story at any moment to see it as a reader will.</p>
+  <div class="rooms">
+    <div class="room">
+      <div class="copy"><div class="num">1 · Draft</div><h3>Plan on a board of cards</h3><p>Lay out your story as cards. Draw branching choices as links between them, add stop points, and watch a glowing trace follow the path while you play it.</p></div>
+      <figure><img src="img/board.jpg" width="1600" height="1000" loading="lazy" alt="The beat board: story cards in a row with branching links between them."></figure>
+    </div>
+    <div class="room">
+      <div class="copy"><div class="num">2 · Write</div><h3>Write it as steps, a script or a manuscript</h3><p>The same story in three views. The manuscript has chapters, notes, revision colours, a dialogue view and a writing history. Bring in a Word, text or Markdown document you've already written.</p></div>
+      <figure><img src="img/write-detail.jpg" width="1600" height="1000" loading="lazy" alt="Close-up of the writing view: the list of steps beside the written lines."></figure>
+    </div>
+    <div class="room">
+      <div class="copy"><div class="num">3 · Produce</div><h3>Bring in your art</h3><p>Pages, backgrounds, characters and their expressions. Cut scenes from a comic page, build layers, design your title screen, and keep track of what's left to do.</p></div>
+      <figure><img src="img/produce.jpg" width="1600" height="1000" loading="lazy" alt="The Produce view: scene cutter, asset library and production board."></figure>
+    </div>
+    <div class="room">
+      <div class="copy"><div class="num">4 · Stage</div><h3>Stage each scene on a timeline</h3><p>Camera moves, overlays, music and sound, timed to your lines. Save a scene as a video when you want to share a moment.</p></div>
+      <figure><img src="img/stage.jpg" width="1600" height="1000" loading="lazy" alt="The Stage view: a timeline of scenes, lines and sounds under a preview."></figure>
+    </div>
+    <div class="room">
+      <div class="copy"><div class="num">5 · Publish</div><h3>Share a story anyone can read</h3><p>Check for dead ends with the story checker, see every branch on a map, then publish the story as a single web page. Your readers need nothing but a browser.</p></div>
+      <figure><img src="img/player.jpg" width="1200" height="624" loading="lazy" alt="A published story's title screen, with Play, Load, Chapters, Extras and Settings."></figure>
+    </div>
+  </div>
+</div></section>
+
+<section class="save" id="saving"><div class="wrap">
+  <h2>Your work stays on your computer</h2>
+  <p class="intro">Arcanum has no accounts and no servers. Nothing you make is uploaded, even when you use it here on the website.</p>
+  <div class="steps3">
+    <div><h3>Saved as you go</h3><p>Every change is kept in your browser on this computer, so your projects are waiting next time you open the studio.</p></div>
+    <div><h3>Save a project file</h3><p>File ▸ Save project file puts a copy on your computer. In Chrome and Edge you choose the folder; other browsers use your Downloads folder.</p></div>
+    <div><h3>Open it anywhere</h3><p>File ▸ Load project file opens that copy again: on another computer, in the desktop app, or after clearing your browser.</p></div>
+  </div>
+  <p class="note">Clearing your browser's history and site data also clears the projects kept in it. Save a project file now and then, and tick the box to include pictures and sounds when you want a complete copy.</p>
+</div></section>
+
+<section id="download"><div class="wrap">
+  <h2>Download Arcanum</h2>
+  <p class="intro">The desktop app works with no internet connection at all and keeps your projects in its own folder. It's the same studio as the website.</p>
+  <div class="dl">
+    <a data-asset="Arcanum-Setup.exe" href="#"><strong>Windows</strong><span>Windows 10 and 11, 64-bit</span><em>Download installer (.exe)</em></a>
+    <a data-asset="Arcanum-mac-arm64.dmg" href="#"><strong>Mac with Apple chip</strong><span>M1 and later</span><em>Download (.dmg)</em></a>
+    <a data-asset="Arcanum-mac-x64.dmg" href="#"><strong>Mac with Intel</strong><span>Older Intel Macs</span><em>Download (.dmg)</em></a>
+    <a data-asset="Arcanum-linux.AppImage" href="#"><strong>Linux</strong><span>Most distributions</span><em>Download (.AppImage)</em></a>
+    <a href="download/Arcanum.html" download><strong>Single file</strong><span>Works in any modern browser, no installing</span><em>Download Arcanum.html</em></a>
+    <a class="soon" href="#" aria-disabled="true" tabindex="-1"><strong>iPad and iPhone</strong><span>Arcanum: Visual Novel Suite</span><em>Coming to the App Store</em></a>
+  </div>
+  <p id="relinfo" aria-live="polite"></p>
+  <details>
+    <summary>Windows or Mac says the app can't be opened</summary>
+    <p>The installers aren't signed with a paid certificate, so your computer asks once. On Windows, choose <b>More info</b>, then <b>Run anyway</b>. On a Mac, right-click Arcanum in Applications, choose <b>Open</b>, then <b>Open</b> again (or go to System Settings ▸ Privacy &amp; Security and press <b>Open Anyway</b>).</p>
+  </details>
+  <details>
+    <summary>How the single file works</summary>
+    <p>Arcanum.html is the whole studio in one file. Save it anywhere and double-click it to open it in your browser, even with no internet. Projects are kept in that browser on that computer, just like the website. Keep the file in one place, because moving it starts a fresh, empty workspace.</p>
+  </details>
+</div></section>
+</main>
+
+<footer><div class="wrap">
+  <a class="brand" href="#top"><img src="img/apple-touch-icon.png" alt="">Arcanum</a>
+  <span>Free and open source, under the MIT License.</span>
+  <a href="privacy.html">Privacy</a>
+  <a data-repo-link="issues/new" href="#">Report a problem</a>
+  <a data-repo-link="" href="#">Source code</a>
+</div></footer>
+
+<script>
+/* The GitHub repository this site and its installers live in. Change it here if the repository is renamed. */
+var REPO = 'A-Wildheart/arcanum';
+(function () {
+  var base = 'https://github.com/' + REPO;
+  document.querySelectorAll('[data-repo-link]').forEach(function (a) {
+    var p = a.getAttribute('data-repo-link'); a.href = base + (p ? '/' + p : '');
+  });
+  var assets = document.querySelectorAll('[data-asset]');
+  assets.forEach(function (a) { a.href = base + '/releases/latest/download/' + a.getAttribute('data-asset'); });
+  var info = document.getElementById('relinfo');
+  /* ask GitHub which installers the latest release has; without an answer the links above still work */
+  fetch('https://api.github.com/repos/' + REPO + '/releases/latest').then(function (r) {
+    if (r.status === 404) throw 'none';
+    return r.ok ? r.json() : Promise.reject('error');
+  }).then(function (rel) {
+    var names = (rel.assets || []).map(function (x) { return x.name; });
+    assets.forEach(function (a) {
+      if (names.indexOf(a.getAttribute('data-asset')) < 0) { a.classList.add('soon'); a.querySelector('em').textContent = 'Not in this release yet'; }
+    });
+    var d = rel.published_at ? new Date(rel.published_at).toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' }) : '';
+    info.innerHTML = 'Latest desktop release: ' + (rel.name || rel.tag_name) + (d ? ', ' + d : '') + '. <a href="' + base + '/releases">All releases</a>';
+  }).catch(function (e) {
+    if (e === 'none') {
+      assets.forEach(function (a) { a.classList.add('soon'); a.querySelector('em').textContent = 'Installers coming soon'; });
+      info.textContent = 'The desktop installers are being prepared. In the meantime, use the studio in your browser or the single file.';
+    } else {
+      info.innerHTML = '<a href="' + base + '/releases">See all releases on GitHub</a>';
+    }
+  });
+})();
+</script>
+</body>
+</html>
